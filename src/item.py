@@ -64,8 +64,3 @@ class Item:
             self.__name = new_name[:10].strip()
         else:
             self.__name = new_name
-
-
-
-
-
