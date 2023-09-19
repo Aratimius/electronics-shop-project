@@ -20,6 +20,13 @@ class Item:
         self.price = price
         self.quantity = quantity
 
+    def __str__(self):
+        return f"{self.__name}"
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}('{self.__name}', " \
+               f"{self.price}, {self.quantity})"
+
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
@@ -35,12 +42,12 @@ class Item:
         self.price *= self.pay_rate
 
     @classmethod
-    def instantiate_from_csv(cls):
+    def instantiate_from_csv(cls, filepath):
         """
         Классметод, считывающий информацию с csv-файла, и передающий данные в
         из файла для инициализации экземпляров класса Item
         """
-        with open('../src/items.csv', newline='', encoding='Windows-1251') as csvfile:
+        with open(filepath, newline='', encoding='Windows-1251') as csvfile:
             reader = csv.DictReader(csvfile)
             # Создание сразу нескольких экземпляров
             for row in reader:
