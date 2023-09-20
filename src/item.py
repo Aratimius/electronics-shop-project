@@ -27,6 +27,11 @@ class Item:
         return f"{self.__class__.__name__}('{self.__name}', " \
                f"{self.price}, {self.quantity})"
 
+    def __add__(self, other):
+        if issubclass(other.__class__, self.__class__):
+            return self.quantity + other.quantity
+        return 'Одно из слагаемых не отвечает требованиям'
+
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
