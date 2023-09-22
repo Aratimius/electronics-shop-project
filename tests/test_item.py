@@ -54,3 +54,4 @@ def test_add():
     assert item1 + phone1 == 200
     assert phone1 + phone1 == 200
     assert item1 + 100 == 'Одно из слагаемых не отвечает требованиям'
+
