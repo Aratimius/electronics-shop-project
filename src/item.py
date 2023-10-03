@@ -1,6 +1,20 @@
 import csv
 
 
+class InstantiateCSVError(Exception):
+    """Класс для кастомного исключения"""
+    def __init__(self, *args, **kwargs):
+        self.message = 'Файл .csv поврежден'
+
+
+class ShellExecutor:
+    """Здесь описаны условия при которых вызывается кастомное исключение"""
+    def __init__(self, content):
+        self.content = content
+        if len(content) < 3:
+            raise InstantiateCSVError
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -55,11 +69,28 @@ class Item:
         Классметод, считывающий информацию с csv-файла, и передающий данные в
         из файла для инициализации экземпляров класса Item
         """
-        with open(filepath, newline='', encoding='Windows-1251') as csvfile:
-            reader = csv.DictReader(csvfile)
-            # Создание сразу нескольких экземпляров
-            for row in reader:
-                cls.all.append(cls(row['name'], float(row['price']), int(row['quantity'])))
+        # Обработка исключения FileNotFoundError
+        # quantity:
+        #         1
+        #         3
+        #         5
+        #         5
+        #         5
+
+        try:
+            with open(filepath, newline='', encoding='utf-8') as csvfile:
+                reader = csv.DictReader(csvfile)
+                # Создание сразу нескольких экземпляров
+                for row in reader:
+                    try:
+                        ShellExecutor(row)
+                    # Поймает нужную ошибку только тогда, когда удален один из столбцов
+                    except InstantiateCSVError as ex:
+                        print(ex.message)
+                        break
+                    cls.all.append(cls(row['name'], float(row['price']), int(row['quantity'])))
+        except FileNotFoundError:
+            print('Файл не найден')
 
     @staticmethod
     def string_to_number(data_string) -> int:

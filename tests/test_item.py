@@ -1,6 +1,7 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 import pytest
 from src.item import Item
+from src.item import InstantiateCSVError
 from tests.test_phone import Phone
 
 
@@ -55,3 +56,7 @@ def test_add():
     assert phone1 + phone1 == 200
     assert item1 + 100 == 'Одно из слагаемых не отвечает требованиям'
 
+
+def test_file_corrupted():
+    with pytest.raises(InstantiateCSVError, match='Файл .csv поврежден'):
+        InstantiateCSVError('../src/corrupted.csv')
