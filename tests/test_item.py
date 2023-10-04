@@ -41,14 +41,17 @@ def test_instantiate_from_csv():
 
 
 def test_str(item_for_test):
+    """Проверка на правильность выведения __str__"""
     assert str(item_for_test) == 'Карандаши'
 
 
 def test_repr(item_for_test):
+    """Проверка на правильность выведения __repr__"""
     assert repr(item_for_test) == 'Item(\'Карандаши\', 30, 100)'
 
 
 def test_add():
+    """Проверка на правильность работы __add__"""
     item1 = Item('Карандаши', 30, 100)
     phone1 = Phone('Карандаши', 30, 100, 3)
 
@@ -58,5 +61,14 @@ def test_add():
 
 
 def test_file_corrupted():
-    with pytest.raises(InstantiateCSVError, match='Файл .csv поврежден'):
-        InstantiateCSVError('../src/corrupted.csv')
+    """
+    Выскочит ошибка, если файл поврежден
+    (если не хватает столбца)
+    """
+    with pytest.raises(InstantiateCSVError):
+        Item.instantiate_from_csv('../src/corrupted.csv')
+
+def test_file_not_found():
+    """Выскочит ошибка, если файл не найден"""
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv('asdf')

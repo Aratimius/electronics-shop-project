@@ -7,14 +7,6 @@ class InstantiateCSVError(Exception):
         self.message = 'Файл .csv поврежден'
 
 
-class ShellExecutor:
-    """Здесь описаны условия при которых вызывается кастомное исключение"""
-    def __init__(self, content):
-        self.content = content
-        if len(content) < 3:
-            raise InstantiateCSVError
-
-
 class Item:
     """
     Класс для представления товара в магазине.
@@ -83,14 +75,15 @@ class Item:
                 # Создание сразу нескольких экземпляров
                 for row in reader:
                     try:
-                        ShellExecutor(row)
+                        if len(row) < 3:
+                            raise InstantiateCSVError
                     # Поймает нужную ошибку только тогда, когда удален один из столбцов
                     except InstantiateCSVError as ex:
-                        print(ex.message)
-                        break
+                        raise InstantiateCSVError(ex.message)
+
                     cls.all.append(cls(row['name'], float(row['price']), int(row['quantity'])))
         except FileNotFoundError:
-            print('Файл не найден')
+            raise FileNotFoundError('Файл не найден')
 
     @staticmethod
     def string_to_number(data_string) -> int:

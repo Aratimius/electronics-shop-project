@@ -18,10 +18,12 @@ def test_change_lang(keyboard_for_test):
 
 
 def test_error(keyboard_for_test):
+    """Ошибка выскочит если ящык не RU или EN"""
     with pytest.raises(AttributeError):
         keyboard_for_test.language = 'CH'
 
 
 def test_language(keyboard_for_test):
+    """Можно поменять язык просто приравняв нужный атрибут, но при условии, что это будет RU или EN"""
     keyboard_for_test.language = 'RU'
     assert keyboard_for_test.language == 'RU'
