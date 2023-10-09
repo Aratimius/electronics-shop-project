@@ -2,7 +2,7 @@ from src.item import Item
 
 
 class MixinLog:
-
+    """Класс для расширения функционала (добавляет возможность менять язык)"""
     def __init__(self):
         # Язык по умолчанию английский
         self._language = 'EN'
@@ -28,6 +28,7 @@ class MixinLog:
 
 
 class Keyboard(Item, MixinLog):
+    """Наследник Item с возможностью смены языка"""
     pass
 
 print(Keyboard.__mro__)

@@ -2,9 +2,12 @@ import csv
 
 
 class InstantiateCSVError(Exception):
-    """Класс для кастомного исключения"""
+    """Класс для кастомного исключения, когда файл поврежден"""
     def __init__(self, *args, **kwargs):
-        self.message = 'Файл .csv поврежден'
+        if len(args) > 0:
+            self.message = args[0]
+        else:
+            self.message = 'Файл .csv поврежден'
 
 
 class Item:
@@ -37,6 +40,7 @@ class Item:
                f"{self.price}, {self.quantity})"
 
     def __add__(self, other):
+        """Складывает колличество товара в магазине"""
         if issubclass(other.__class__, self.__class__):
             return self.quantity + other.quantity
         return 'Одно из слагаемых не отвечает требованиям'
@@ -62,6 +66,7 @@ class Item:
         из файла для инициализации экземпляров класса Item
         """
         # Обработка исключения FileNotFoundError
+        # и исключения InstantiateCSVError
         # quantity:
         #         1
         #         3
@@ -74,13 +79,8 @@ class Item:
                 reader = csv.DictReader(csvfile)
                 # Создание сразу нескольких экземпляров
                 for row in reader:
-                    try:
-                        if len(row) < 3:
-                            raise InstantiateCSVError
-                    # Поймает нужную ошибку только тогда, когда удален один из столбцов
-                    except InstantiateCSVError as ex:
-                        raise InstantiateCSVError(ex.message)
-
+                    if len(row) < 3:
+                        raise InstantiateCSVError('Файл поврежден')
                     cls.all.append(cls(row['name'], float(row['price']), int(row['quantity'])))
         except FileNotFoundError:
             raise FileNotFoundError('Файл не найден')
